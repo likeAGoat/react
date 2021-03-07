@@ -1,0 +1,97 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>구구단</title>
+    <script crossorigin src="https://unpkg.com/react@16.7.0/umd/react.production.min.js"></script>
+    <!-- 리액트 코드를 웹에다가 붙여주는 역할 -->
+    <!-- 나중에 배포시 development -> production으로 변경 -->
+    <script crossorigin src="https://unpkg.com/react-dom@16.7.0/umd/react-dom.production.min.js"></script>
+    <!-- html 태그를 읽을 수 없다. 바벨을 넣어주자(모든 브라우저에서 돌아갈 수 있도록 해줌 es5로도 변경해줌) -->
+    <script src="../script/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div> <!-- 결과 예측 <div id="root"><button>Like</button></div> -->
+    <script type="text/babel">
+        class GuGuDan extends React.Component {
+            constructor(props) {
+                super(props);
+                //변경하는 부분은 state로 !! 수동으로 바꿀 때
+                this.state = {
+                    first: Math.ceil(Math.random() * 9),
+                    second: Math.ceil(Math.random() * 9),
+                    value: '',
+                    result: '',
+                };
+            }
+            onSubmit = (e) => {
+                e.preventDefault();
+                if (parseInt(this.state.value) === this.state.first * this.state.second) {
+                    //setState에다가 바꾸고 싶은 상태를 입력하면된다.
+                    this.setState((prevState) => {
+                        return{
+                            result: '정답 : ' + prevState.value,
+                            first: Math.ceil(Math.random() * 9),
+                            second: Math.ceil(Math.random() * 9),
+                            value: '',
+                        };
+                    });
+                    // this.setState({
+                    //     value: this.state.value + 1,
+                    // });
+                    // this.setState({
+                    //     value: this.state.value + 1,
+                    // });
+                    // this.setState({
+                    //     value: this.state.value + 1,
+                    // });
+                    //새로운 value가 기존 value + 3 될거라고 예상을 한다. 하지만 value + 1이 될 수도 있다. 비동기이기 때문에
+                    //한가지 원칙으로 외워주자
+                    //예전 state로 새로운 state를 만들 때는 리턴해주는 함수를 쓰는 것으로 외우자!!
+                    this.setState((prevState) => {
+                        return{
+                            value: this.state.value + 1
+                        };
+                    });
+                    //이렇게하면 DOM이 선택이 된다.
+                    this.input.focus();
+                } else {
+                    this.setState({
+                        result: '땡',
+                        value: '',
+                    });
+                    this.input.focus();
+                }
+            };
+
+            // 이렇듯 변하는 부분을 내가 컨트롤 한다.
+            onChange = (e) => this.setState({ value: e.target.value });
+
+            onRef = (c) => {this.input = c};
+
+            input;
+
+            // jsx와 함수 부분을 따로 분리해서 써주는 것이 좋다. 렌더링 할 때 마다 함수를 호출하는 것도 낭비이기 때문
+            render() {
+                console.log('렌더링');
+                return (
+                    <React.Fragment>
+                        <div>{this.state.first}곱하기{this.state.second}는?</div>
+                        <form onSubmit={this.onSubmit}>
+                            {/* 직접 변경하는 것,즉 수동으로 변경하는 것만 setState를 써준다.*/}
+                            {/* input에다가 focus를 하고 싶다. -> Dom에 직접 접근하고 싶을 때는 ref를 넣어 준다. 이것도 외우자!!!(강의10 출처)*/}
+                            <input ref={this.onRef} type="number" value={this.state.value} onChange={this.onChange} />
+                            {/* input.onchange = function(e){console.log(e.target.value)} */}
+                            <button>입력!</button>
+                        </form>
+                        <div>{this.state.result}</div>
+                    </React.Fragment>
+                );
+            }
+        }
+    </script>
+    <script type="text/babel">
+        ReactDOM.render(<GuGuDan />, document.querySelector('#root'));
+    </script>
+</body>
+</html>

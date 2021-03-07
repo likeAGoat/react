@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <script crossorigin src="https://unpkg.com/react@16.7.0/umd/react.production.min.js"></script>
+        <!-- 리액트 코드를 웹에다가 붙여주는 역할 -->
+        <!-- 나중에 배포시 development -> production으로 변경 -->
+        <script crossorigin src="https://unpkg.com/react-dom@16.7.0/umd/react-dom.production.min.js"></script>
+        <!-- html태그를 읽을수 없다. 바벨을 넣어주자(모든 브라우저에서 돌아갈 수 있도록 해줌 es5로도 변경해줌) -->
+        <script src="../script/babel.min.js"></script>
+    </head>
+    <body>
+        <div id="root"></div> <!-- 결과 예측 <div id="root"><button>Like</button></div> -->
+        <script type="text/babel">
+            //태그를 만들어 주는 함수
+            // const e = React.createElement;
+            // React.Component를 상속 받아 온다.
+            class LikeButton extends React.Component{
+                constructor(props){
+                    super(props);
+                    //상태를 다 적어준다.(constructor안에다 적는다.)
+                    //화면이 변경되는 부분이 state가 된다.
+                    this.state = {
+                        liked: false,
+                    };
+                }
+
+                render(){ //JSX(js + XML)는 다 createElement로 생각할 수 있다.
+                    return <button type="submit" onClick={() => {this.setState({ liked: true })}}>
+                        {this.state.liked === true ? 'Liked' : 'Like'}
+                    </button>;
+                    //클릭을 했을 때 상태를 true로 변경해 준다. 상태가 바뀌면 화면이 바뀐다.
+                    // return e('button',{onClick:() => {this.setState({ liked: true })}, type: 'submit'},
+                    // this.state.liked === true ? 'Liked' : 'Like',
+                    // ); //<button onclick="() => {console.log('clicked')}">Like</button>이러한 태그를 만들겠다.
+                }
+            }
+        </script>
+        <script type="text/babel">
+            // 화면에 실제로 반영을 해준다. LikeButton을 #root에다가 실제로 붙이겠다.
+            // ReactDOM.render(e(LikeButton), document.querySelector('#root'));
+            // 컴포넌트의 장점, 원하는 컴포넌트를 생성할 수 있다.
+            ReactDOM.render(<div><LikeButton /><LikeButton /><LikeButton /><LikeButton /></div>, document.querySelector('#root'));
+        </script>
+    </body>
+</html>
